@@ -1,9 +1,10 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthMiddleware, LoggerMiddleware } from 'common';
+import { AuthMiddleware, LoggerMiddleware } from '../common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
+import { publicUrls } from './public.url';
 
 @Module({
   imports: [],
@@ -20,6 +21,7 @@ export class AppModule {
     consumer.apply(LoggerMiddleware).forRoutes("*");
     consumer
       .apply(AuthMiddleware)
+      .exclude(...publicUrls)
       .forRoutes("*");
   }
 }
